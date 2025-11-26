@@ -1,5 +1,7 @@
 package com.daytonjwatson.zerorespawn.util;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -20,12 +22,19 @@ public final class MessageUtil {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
+    public static Component component(String text) {
+        if (text == null) {
+            return Component.empty();
+        }
+        return LegacyComponentSerializer.legacySection().deserialize(color(text));
+    }
+
     public static void send(CommandSender sender, String message) {
-        sender.sendMessage(color(message));
+        sender.sendMessage(component(message));
     }
 
     public static void sendPrefixed(CommandSender sender, String message) {
-        sender.sendMessage(PREFIX + color(message));
+        sender.sendMessage(component(PREFIX + color(message)));
     }
 
     public static String formatPrivateTo(String targetName, String message) {
