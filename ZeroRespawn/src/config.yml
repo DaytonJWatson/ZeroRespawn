@@ -1,6 +1,45 @@
 hardcore:
   world: "world"
+  spawn_radius: 5000
 
 messages:
   death_ban: "&cYou died in hardcore mode. You are banned from this server."
+  death_broadcast: "&c{player} survived {days} days and died at {coords} to {cause}."
   info: "&6This server uses &eZeroRespawn &6hardcore rules. Die once, and you're done."
+
+guide:
+  title: "ZeroRespawn Survival Guide"
+  pages:
+    - "&6Welcome to &eZeroRespawn&6!\n\n&cThis is true hardcore.&r If you die even once, you are &lpermanently banned&r. No exceptions."
+    - "&eRules\n&7- PvP and griefing are allowed. Trust no one.\n- Staff will not revive you.\n- Play smart: food, shelter, armor first."
+    - "&eTips\n&7- Avoid risky caves early.\n- Keep a water bucket and blocks.\n- Sleep to skip night and earn a small rested bonus.\n- Take notes with /note."
+
+chat:
+  format: "{prefix}&f{player} &7» &f{message}"
+
+tab:
+  header: "&6ZeroRespawn\n&7True Hardcore: One Life Only\n&fOnline: {online}/{max}"
+  footer: "&7World: {world}\n&bDays survived: {days_survived}\n&cDeath = Permanent Ban"
+
+features:
+  survival_hud:
+    enabled: true
+    update_interval_ticks: 40
+    mode: ACTION_BAR
+    show_biome: true
+    show_time_to_night: true
+    show_armor_summary: true
+
+  first_join_grace:
+    enabled: true
+    duration_seconds: 90
+    resistance_level: 1
+    apply_weakness: true
+
+  rested_bonus:
+    enabled: true
+    absorption_hearts: 4
+    duration_seconds: 120
+    regeneration_level: 1
+    regeneration_duration_seconds: 60
+    cooldown_minutes: 30

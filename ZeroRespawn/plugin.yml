@@ -11,6 +11,18 @@ commands:
     usage: "/<command> [info|reload]"
     aliases: [zr, hardcore]
 
+  guide:
+    description: "Receive the ZeroRespawn guide book."
+    aliases: [book]
+
+  stats:
+    description: "View survival statistics."
+    usage: "/stats [player]"
+
+  note:
+    description: "Manage coordinate notes"
+    usage: "/note <add|list|remove>"
+
   msg:
     description: "Send a private message to a player."
     usage: "/msg <player> <message>"
@@ -32,3 +44,19 @@ permissions:
   zerorespawn.admin:
     description: "Reload ZeroRespawn configuration."
     default: op
+
+  zerorespawn.guide:
+    description: "Receive the guide book."
+    default: true
+
+  zerorespawn.stats:
+    description: "View personal stats."
+    default: true
+
+  zerorespawn.stats.others:
+    description: "View other players' stats."
+    default: op
+
+  zerorespawn.note:
+    description: "Manage personal notes."
+    default: true

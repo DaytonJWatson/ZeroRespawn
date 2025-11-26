@@ -52,6 +52,21 @@ public class HelpCommand implements CommandExecutor {
                 null // everyone
         ));
         ENTRIES.add(new HelpEntry(
+                "guide",
+                "Receive the ZeroRespawn guide book.",
+                "zerorespawn.guide"
+        ));
+        ENTRIES.add(new HelpEntry(
+                "stats [player]",
+                "View your survival statistics.",
+                "zerorespawn.stats"
+        ));
+        ENTRIES.add(new HelpEntry(
+                "note <add|list|remove>",
+                "Manage coordinate notes.",
+                "zerorespawn.note"
+        ));
+        ENTRIES.add(new HelpEntry(
                 "help",
                 "Show this help menu.",
                 null // everyone
