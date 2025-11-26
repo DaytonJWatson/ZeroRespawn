@@ -2,7 +2,6 @@ package com.daytonjwatson.zerorespawn.managers;
 
 import com.daytonjwatson.zerorespawn.ZeroRespawnPlugin;
 import com.daytonjwatson.zerorespawn.util.MessageUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -11,7 +10,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -66,7 +64,7 @@ public class SurvivalHudManager {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getGameMode() == GameMode.SPECTATOR) continue;
             if (mode == Mode.ACTION_BAR) {
-                player.sendActionBar(MessageUtil.component(buildActionBar(player)));
+                player.sendActionBar(MessageUtil.color(buildActionBar(player)));
             } else {
                 renderSidebar(player);
             }
@@ -138,7 +136,7 @@ public class SurvivalHudManager {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         if (manager == null) return;
         Scoreboard board = manager.getNewScoreboard();
-        Objective obj = board.registerNewObjective("zrhud", Criteria.DUMMY, Component.text(ChatColor.GOLD + "ZeroRespawn"));
+        Objective obj = board.registerNewObjective("zrhud", "dummy", ChatColor.GOLD + "ZeroRespawn");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         obj.getScore(ChatColor.RED + "❤ " + (int) Math.ceil(player.getHealth()) + "/" + (int) player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()).setScore(5);

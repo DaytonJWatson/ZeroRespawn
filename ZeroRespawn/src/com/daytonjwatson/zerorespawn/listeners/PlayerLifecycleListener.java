@@ -3,7 +3,6 @@ package com.daytonjwatson.zerorespawn.listeners;
 import com.daytonjwatson.zerorespawn.ZeroRespawnPlugin;
 import com.daytonjwatson.zerorespawn.managers.PlayerDataManager;
 import com.daytonjwatson.zerorespawn.util.MessageUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +11,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -77,9 +75,7 @@ public class PlayerLifecycleListener implements Listener {
         Location spawn = findSafeRandomLocation(world);
         if (spawn != null) {
             player.teleport(spawn);
-            if (spawn.getWorld().getEnvironment() == World.Environment.NORMAL) {
-                player.setRespawnLocation(spawn, true);
-            }
+            player.setBedSpawnLocation(spawn, true);
         }
 
         giveGuideBook(player);
@@ -167,7 +163,7 @@ public class PlayerLifecycleListener implements Listener {
 
         double days = dataManager.getDaysSurvived(player.getUniqueId());
         String coords = String.format("%d, %d, %d", player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
-        String cause = formatDamageCause(event.getDamageSource());
+        String cause = event.getCause() != null ? event.getCause().name().toLowerCase().replace('_', ' ') : "unknown";
         String template = plugin.getConfig().getString("messages.death_broadcast", "&c{player} survived {days} days and died at {coords} to {cause}.");
         String formatted = MessageUtil.color(template
                 .replace("{player}", player.getName())
@@ -181,18 +177,10 @@ public class PlayerLifecycleListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         String format = plugin.getConfig().getString("chat.format", "{prefix}&f{player} &7» &f{message}");
-        event.renderer((player, message, viewers) -> {
-            String replaced = format
-                    .replace("{prefix}", MessageUtil.getPrefix())
-                    .replace("{player}", player.getName());
-            int idx = replaced.indexOf("{message}");
-            if (idx >= 0) {
-                String before = replaced.substring(0, idx);
-                String after = replaced.substring(idx + "{message}".length());
-                return MessageUtil.component(before).append(message).append(MessageUtil.component(after));
-            }
-            return MessageUtil.component(replaced).append(Component.space()).append(message);
-        });
+        event.setFormat(MessageUtil.color(format)
+                .replace("{prefix}", MessageUtil.getPrefix())
+                .replace("{player}", event.getPlayer().getName())
+                .replace("{message}", "%2$s"));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -252,24 +240,6 @@ public class PlayerLifecycleListener implements Listener {
 
     private void applyTabFormatting(Player player) {
         plugin.getTabManager().apply(player);
-    }
-
-    private String formatDamageCause(DamageSource source) {
-        if (source == null || source.getDamageType() == null) {
-            return "unknown";
-        }
-        String key = source.getDamageType().translationKey();
-        int idx = Math.max(key.lastIndexOf('.'), key.lastIndexOf(':'));
-        if (idx >= 0 && idx + 1 < key.length()) {
-            key = key.substring(idx + 1);
-        }
-        key = key.replace('.', ' ').replace('_', ' ');
-        StringBuilder builder = new StringBuilder();
-        for (String part : key.split(" ")) {
-            if (part.isEmpty()) continue;
-            builder.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(" ");
-        }
-        return builder.toString().trim();
     }
 }
 
