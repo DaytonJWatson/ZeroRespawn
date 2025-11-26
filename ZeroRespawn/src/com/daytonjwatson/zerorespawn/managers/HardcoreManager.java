@@ -7,6 +7,9 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
+/**
+ * Handles hardcore-specific utilities such as death banning and info message formatting.
+ */
 public class HardcoreManager {
 
     private final ZeroRespawnPlugin plugin;
@@ -16,25 +19,19 @@ public class HardcoreManager {
     }
 
     public void handleDeath(Player player) {
-        // Colored kick message (from config, with default)
         String deathMessage = MessageUtil.color(plugin.getConfig().getString(
                 "messages.death_ban",
                 "&cYou died in hardcore mode. You are banned from this server."
         ));
 
-        // Reason must be plain text for the ban list
         String plainReason = MessageUtil.stripColors(deathMessage);
-
-        // Modern API: profile-based ban
-        // duration = null => permanent
         player.ban(
                 plainReason,
                 (Duration) null,
                 "ZeroRespawn",
-                false // don't auto-kick, we want custom kick message
+                false
         );
 
-        // Kick with colored message next tick
         Bukkit.getScheduler().runTask(plugin, () -> player.kickPlayer(deathMessage));
     }
 
@@ -47,5 +44,7 @@ public class HardcoreManager {
 
     public void reload() {
         plugin.reloadConfig();
+        plugin.getSurvivalHudManager().loadFromConfig();
     }
 }
+
